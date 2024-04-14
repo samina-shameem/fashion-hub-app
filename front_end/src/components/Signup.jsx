@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Container from 'react-bootstrap/Container';
+import Container from "react-bootstrap/Container";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
-  const [email, setEmail] = useState('');
-  const [password1, setPassword1] = useState('');
-  const [password2, setPassword2] = useState('');
+  const [email, setEmail] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
+  const [registrationError, setRegistrationError] = useState(null);
+  const navigate = useNavigate();
 
   // Validate email format
   const isValidEmail = (email) => {
@@ -16,7 +19,7 @@ function Signup() {
   };
 
   // Check if passwords match
-  const arePasswordsEqual = (password1,password2) => {
+  const arePasswordsEqual = (password1, password2) => {
     return password1 === password2;
   };
 
@@ -26,7 +29,7 @@ function Signup() {
 
     // Check if email is valid
     if (!isValidEmail(newEmail)) {
-      setEmailError('Email is invalid');
+      setEmailError("Email is invalid");
     } else {
       setEmailError(null);
     }
@@ -34,42 +37,80 @@ function Signup() {
 
   const handlePassword1Change = (event) => {
     const newPassword = event.target.value;
-    setPassword1(newPassword);    
+    setPassword1(newPassword);
     // Check if passwords are same
-    if (!arePasswordsEqual(newPassword,password2)) {
-      setPasswordError('Passwords do not match');
+    if (!arePasswordsEqual(newPassword, password2)) {
+      setPasswordError("Passwords do not match");
     } else {
       setPasswordError(null);
-    }    
+    }
   };
 
   const handlePassword2Change = (event) => {
     const newPassword = event.target.value;
     setPassword2(newPassword);
     // Check if passwords are same
-    if (!arePasswordsEqual(newPassword,password1)) {
-      setPasswordError('Passwords do not match');
+    if (!arePasswordsEqual(newPassword, password1)) {
+      setPasswordError("Passwords do not match");
     } else {
       setPasswordError(null);
-    }    
-
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    //Check if email is valid
-    if (!isValidEmail(email)) {
-      setEmailError('Email is invalid');
-      return;
-    } 
 
-    // Check if passwords match
-    if (!arePasswordsEqual()) {
-      setPasswordError('Passwords do not match');
+    // Check if email is valid
+    if (!isValidEmail(email)) {
+      setEmailError("Email is invalid");
       return;
     }
 
-    // Send fetch request to API or perform other actions
+    // Check if passwords match
+    if (!arePasswordsEqual(password1, password2)) {
+      setPasswordError("Passwords do not match");
+      return;
+    }
+
+    // Fetch API to check if user already exists
+    fetch(`http://localhost:3000/users?userName=${encodeURIComponent(email)}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // If data is empty, user doesn't exist, proceed with registration
+        if (data.length === 0) {
+          // Proceed with registration
+          return fetch("http://localhost:3000/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userName: email,
+              password: password1,
+            }),
+          });
+        } else {
+          // User already exists, handle accordingly
+          throw new Error("User already exists");
+        }
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        // Registration successful
+        navigate("/signupMessage");
+        // Redirect or handle success here
+      })
+      .catch((error) => {
+        // Handle errors such as network errors, server errors, or user already exists
+        setRegistrationError(`There was a problem with the registration: ${error.message}`);
+      });
   };
 
   return (
@@ -83,7 +124,7 @@ function Signup() {
             value={email}
             onChange={handleEmailChange}
           />
-          {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
+          {emailError && <p style={{ color: "red" }}>{emailError}</p>}
           <Form.Text className="text-muted">
             We'll never share your email with anyone else.
           </Form.Text>
@@ -107,13 +148,15 @@ function Signup() {
             value={password2}
             onChange={handlePassword2Change}
           />
-          {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+          {passwordError && <p style={{ color: "red" }}>{passwordError}</p>}
         </Form.Group>
 
         <Button variant="primary" type="submit">
           Register
         </Button>
       </Form>
+
+      {registrationError && <p style={{ color: "red" }}>{registrationError}</p>}
     </Container>
   );
 }

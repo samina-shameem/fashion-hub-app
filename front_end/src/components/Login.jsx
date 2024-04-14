@@ -5,6 +5,8 @@ import Form from "react-bootstrap/Form";
 import Container from 'react-bootstrap/Container';
 
 function Login() {
+  // api to call for checking user 
+  // http://localhost:3000/users?userName=user1&password=123
   return (
     <Container >
     <Form>
