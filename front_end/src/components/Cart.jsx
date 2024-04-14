@@ -1,37 +1,33 @@
-import React from "react";
+import React, { useContext } from "react";
 import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
+import { CartContext } from "../context/CartProvider";
 
 function Cart() {
+  const { cartArray } = useContext(CartContext);
+
   return (
     <Container>
       <Table striped bordered hover size="sm">
         <thead>
           <tr>
             <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
+            <th>Name</th>
+            <th>Size</th>
+            <th>Price</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td colSpan={2}>Larry the Bird</td>
-            <td>@twitter</td>
-          </tr>
+          {cartArray.map((item, index) => (
+            item.sizes.map((size, i) => (
+              <tr key={index + '-' + i}>
+                <td>{index + 1}</td>
+                <td>{item.name}</td>
+                <td>{size}</td>
+                <td>{item.price}</td>
+              </tr>
+            ))
+          ))}
         </tbody>
       </Table>
     </Container>
