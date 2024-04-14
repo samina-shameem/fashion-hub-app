@@ -24,8 +24,8 @@ const AppHeader = () => {
                 Home
               </Nav.Link>
               {userLoggedIn ? (
-                <Nav.Link as={Link} to="/login">
-                  Log out
+                <Nav.Link as={Link} to="/profile">
+                  Profile
                 </Nav.Link>
               ) : (
                 <>
