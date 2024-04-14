@@ -20,13 +20,15 @@ const AppHeader = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
-              <Nav.Link as={Link} to="/">
-                Home
-              </Nav.Link>
               {userLoggedIn ? (
-                <Nav.Link as={Link} to="/profile">
-                  Profile
-                </Nav.Link>
+                <>
+                  <Nav.Link as={Link} to="/profile">
+                    Profile
+                  </Nav.Link>
+                  <Nav.Link as={Link} to="/cart">
+                    Cart <Badge bg="secondary">4</Badge>
+                  </Nav.Link>
+                </>
               ) : (
                 <>
                   <Nav.Link as={Link} to="/login">
@@ -35,11 +37,11 @@ const AppHeader = () => {
                   <Nav.Link as={Link} to="/signup">
                     Sign up
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/cart">
+                    Cart
+                  </Nav.Link>
                 </>
               )}
-              <Nav.Link as={Link} to="/cart">
-                Cart <Badge bg="secondary">4</Badge>
-              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
