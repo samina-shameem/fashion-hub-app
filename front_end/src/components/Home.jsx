@@ -14,7 +14,8 @@ function Home() {
   const handleSearch = () => {
     setKeyword(searchWord);
   };
-
+  console.log("Home")
+  console.log(keyword);
   return (
     <Container>
       <Row className="justify-content-md-center mt-3">
@@ -32,7 +33,7 @@ function Home() {
         </Col>
       </Row>
       <Row className="justify-content-md-center mt-3">
-        <ProductList searchWord={keyword} />
+        <ProductList keyword={keyword} />
       </Row>
     </Container>
   );

@@ -20,22 +20,23 @@
       "password": "123",
       "id": 13
     }
-  ],
-  "posts": [
+  ],  
+  "products": [
     {
       "id": 1,
-      "title": "json-server",
-      "author": "typicode"
-    }
-  ],
-  "comments": [
+      "name": "Shirt-xbar",
+      "description": "Shirt dress with tie belt",
+      "sizes": "XS,S,M,L,XL,XXL",
+      "star": 3,
+      "price": 299
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "id": 2,
+      "name": "T-Shirt",
+      "description": "T-shirt dress with inset waist",
+      "sizes": "XS,S,M,L,XL",
+      "star": 5,
+      "price": 179
     }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }
