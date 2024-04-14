@@ -3,10 +3,12 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
+import Alert from "react-bootstrap/Alert"; // Import Alert component
 import { CartContext } from "../context/CartProvider";
 
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [alertMessage, setAlertMessage] = useState(null); // State for alert message
   const { setCartArray } = useContext(CartContext);
 
   const toggleSize = (size) => {
@@ -22,13 +24,13 @@ function Product({ item }) {
   const addToCart = () => {
     // Check if any size is selected
     if (selectedSizes.length === 0) {
-      alert("Please select a size before adding to cart");
+      setAlertMessage("Please select a size before adding to cart");
       return;
     }
 
     // Add the item to the cart with selected sizes
     setCartArray((prevCart) => [...prevCart, { ...item, sizes: selectedSizes }]);
-    alert("Item added to cart successfully!");
+    setAlertMessage("Item added to cart successfully!");
   };
 
   return (
@@ -60,6 +62,12 @@ function Product({ item }) {
           </ListGroup.Item>
         </ListGroup>
       </Card>
+      {/* Render Alert if alertMessage exists */}
+      {alertMessage && (
+        <Alert variant="danger" className="mt-3">
+          {alertMessage}
+        </Alert>
+      )}
     </Container>
   );
 }

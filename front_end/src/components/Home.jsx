@@ -14,8 +14,7 @@ function Home() {
   const handleSearch = () => {
     setKeyword(searchWord);
   };
-  console.log("Home")
-  console.log(keyword);
+ 
   return (
     <Container>
       <Row className="justify-content-md-center mt-3">

@@ -9,7 +9,6 @@ function ProductList(props) {
 
     useEffect(() => {
         // Fetch API to search products content
-        console.log(`http://localhost:3000/products?q=${props.keyword}`)
         fetch(`http://localhost:3000/products?q=${props.keyword}`)
             .then((response) => {
                 if (!response.ok) {
@@ -19,7 +18,6 @@ function ProductList(props) {
             })
             .then((data) => {
                 setProducts(data);
-                console.log(data)
             })
             .catch((error) => {
                 // Handle errors such as network errors, server errors
