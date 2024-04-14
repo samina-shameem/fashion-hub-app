@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
+import { CartContext } from "../context/CartProvider";
 
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const { setCartArray } = useContext(CartContext);
 
   const toggleSize = (size) => {
     setSelectedSizes((prevSelectedSizes) => {
@@ -15,6 +17,18 @@ function Product({ item }) {
         return [...prevSelectedSizes, size];
       }
     });
+  };
+
+  const addToCart = () => {
+    // Check if any size is selected
+    if (selectedSizes.length === 0) {
+      alert("Please select a size before adding to cart");
+      return;
+    }
+
+    // Add the item to the cart with selected sizes
+    setCartArray((prevCart) => [...prevCart, { ...item, sizes: selectedSizes }]);
+    alert("Item added to cart successfully!");
   };
 
   return (
@@ -40,10 +54,9 @@ function Product({ item }) {
           </ListGroup.Item>
           <ListGroup.Item>SEK: {item.price}</ListGroup.Item>
           <ListGroup.Item>
-            <Button variant="primary">More Details</Button>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <Button variant="primary">Add to Cart</Button>
+            <Button variant="primary" onClick={addToCart}>
+              Add to Cart
+            </Button>
           </ListGroup.Item>
         </ListGroup>
       </Card>
