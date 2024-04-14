@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Alert from "react-bootstrap/Alert"; // Import Alert component
 import { CartContext } from "../context/CartProvider";
+import ProductImage from "./ProductImage"; // Import the ProductImage component
 
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
@@ -54,7 +55,7 @@ function Product({ item }) {
   return (
     <Container className="mb-4">
       <Card style={{ width: "18rem" }}>
-        <Card.Img variant="top" src="https://picsum.photos/640/360" />
+        <ProductImage /> {/* Render the ProductImage component */}
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
