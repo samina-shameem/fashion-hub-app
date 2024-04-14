@@ -10,19 +10,24 @@ import Home from "./components/Home";
 import Login from "./components/Login";
 import Cart from "./components/Cart";
 import Product from "./components/Product";
+import UserLoginProvider from "./context/UserLoginProvider";
+import Signup from "./components/Signup";
 
 function App() {
   return (
     <>
-      <Router>        
+      <UserLoginProvider>
+      <Router>               
         <AppHeader />        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
       </Router>
+      </UserLoginProvider>
     </>
   );
 }
