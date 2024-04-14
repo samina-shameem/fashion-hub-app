@@ -33,25 +33,24 @@ function Profile({ msg }) {
             </>
           ) : (
             <>
-            <Row>
               <Alert variant="success">
                 <Alert.Heading>Log out success </Alert.Heading>
               </Alert>
-              <Col md={3}>
-              <Button as={Link} to="/login" variant="primary">
-                Log in
-              </Button>
-              </Col >  
-              <Col md={3}>
-              <Button as={Link} to="/signup" variant="primary">
-                Sign up
-              </Button>
-              </Col>
+              <Row className="justify-content-center">
+                <Col md={3}>
+                  <Button as={Link} to="/login" variant="primary">
+                    Log in
+                  </Button>
+                </Col >  
+                <Col md={3}>
+                  <Button as={Link} to="/signup" variant="primary">
+                    Sign up
+                  </Button>
+                </Col>
               </Row>
             </>
           )}
         </Col>
-        
       </Row>
     </Container>
   );
