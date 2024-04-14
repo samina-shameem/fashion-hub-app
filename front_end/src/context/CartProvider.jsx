@@ -1,10 +1,9 @@
-import React, { Children } from "react";
-import { createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 
 export const CartContext = createContext();
 
 function CartProvider({ children }) {
-  const [cartArray, setCartArray] = useState(false);  
+  const [cartArray, setCartArray] = useState([]); // Initialize as empty array
   return (
     <CartContext.Provider
       value={{
