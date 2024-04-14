@@ -9,7 +9,7 @@ import { CartContext } from "../context/CartProvider";
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null); // State for alert message
-  const { setCartArray } = useContext(CartContext);
+  const { cartArray, setCartArray } = useContext(CartContext);
 
   const toggleSize = (size) => {
     setSelectedSizes((prevSelectedSizes) => {
@@ -28,8 +28,26 @@ function Product({ item }) {
       return;
     }
 
-    // Add the item to the cart with selected sizes
-    setCartArray((prevCart) => [...prevCart, { ...item, sizes: selectedSizes }]);
+    const itemsToAdd = selectedSizes.map((size) => {
+      // Check if the item with the same size is already in the cart
+      const existingItemIndex = cartArray.findIndex((cartItem) => cartItem.id === item.id && cartItem.size === size);
+
+      // If the item already exists in the cart, increase its quantity
+      if (existingItemIndex !== -1) {
+        const updatedCartItem = { ...cartArray[existingItemIndex] };
+        updatedCartItem.quantity += 1;
+        return updatedCartItem;
+      } else {
+        // Otherwise, create a new item with quantity 1
+        return {
+          ...item,
+          size,
+          quantity: 1,
+        };
+      }
+    });
+
+    setCartArray((prevCart) => [...prevCart, ...itemsToAdd]);
     setAlertMessage("Item added to cart successfully!");
   };
 
