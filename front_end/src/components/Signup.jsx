@@ -16,7 +16,7 @@ function Signup() {
   };
 
   // Check if passwords match
-  const arePasswordsEqual = () => {
+  const arePasswordsEqual = (password1,password2) => {
     return password1 === password2;
   };
 
@@ -33,15 +33,35 @@ function Signup() {
   };
 
   const handlePassword1Change = (event) => {
-    setPassword1(event.target.value);
+    const newPassword = event.target.value;
+    setPassword1(newPassword);    
+    // Check if passwords are same
+    if (!arePasswordsEqual(newPassword,password2)) {
+      setPasswordError('Passwords do not match');
+    } else {
+      setPasswordError(null);
+    }    
   };
 
   const handlePassword2Change = (event) => {
-    setPassword2(event.target.value);
+    const newPassword = event.target.value;
+    setPassword2(newPassword);
+    // Check if passwords are same
+    if (!arePasswordsEqual(newPassword,password1)) {
+      setPasswordError('Passwords do not match');
+    } else {
+      setPasswordError(null);
+    }    
+
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    //Check if email is valid
+    if (!isValidEmail(email)) {
+      setEmailError('Email is invalid');
+      return;
+    } 
 
     // Check if passwords match
     if (!arePasswordsEqual()) {
