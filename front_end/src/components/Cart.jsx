@@ -5,9 +5,11 @@ import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import { CartContext } from "../context/CartProvider";
+import { UserLoginContext } from "../context/UserLoginProvider";
 
 function Cart() {
   const { cartArray, setCartArray } = useContext(CartContext);
+  const { userName, userLoggedIn } = useContext(UserLoginContext);
 
   let totalPrice = 0;
   let totalItems = 0;
@@ -35,6 +37,34 @@ function Cart() {
   const removeItem = (index) => {
     const updatedCartArray = cartArray.filter((_, i) => i !== index);
     setCartArray(updatedCartArray);
+  };
+
+  const saveCart = () => {
+    // Prepare the cart data to send to the backend
+    const cartData = {
+      userName: userName,
+      cartArray: cartArray,
+    };
+
+    // Send a PUT request to update the cart data on the backend
+    fetch("http://localhost:3000/carts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cartData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to save cart");
+        }
+        // Handle successful response
+        console.log("Cart saved successfully");
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error saving cart:", error);
+      });
   };
 
   return (
@@ -77,7 +107,12 @@ function Cart() {
           <ListGroup.Item>Total Items: {totalItems}</ListGroup.Item>
           <ListGroup.Item>Total Price: {totalPrice}</ListGroup.Item>
           <ListGroup.Item>
-            <Button variant="primary">Pay out</Button>
+            <Button variant="primary" style={{ marginRight: "5px" }}>Pay out</Button>
+            {userLoggedIn ? (
+              <Button variant="primary" onClick={saveCart}>Save</Button>
+            ) : (
+              <p>Please log in to save your cart</p>
+            )}
           </ListGroup.Item>
         </ListGroup>
       </Card>
