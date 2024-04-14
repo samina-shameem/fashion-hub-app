@@ -7,7 +7,7 @@ import Button from "react-bootstrap/Button";
 import { CartContext } from "../context/CartProvider";
 
 function Cart() {
-  const { cartArray } = useContext(CartContext);
+  const { cartArray, setCartArray } = useContext(CartContext);
 
   let totalPrice = 0;
   let totalItems = 0;
@@ -17,6 +17,25 @@ function Cart() {
     totalPrice += item.price * item.quantity;
     totalItems += item.quantity;
   });
+
+  const increaseQuantity = (index) => {
+    const updatedCartArray = [...cartArray];
+    updatedCartArray[index].quantity += 1;
+    setCartArray(updatedCartArray);
+  };
+
+  const decreaseQuantity = (index) => {
+    const updatedCartArray = [...cartArray];
+    if (updatedCartArray[index].quantity > 1) {
+      updatedCartArray[index].quantity -= 1;
+      setCartArray(updatedCartArray);
+    }
+  };
+
+  const removeItem = (index) => {
+    const updatedCartArray = cartArray.filter((_, i) => i !== index);
+    setCartArray(updatedCartArray);
+  };
 
   return (
     <Container>
@@ -30,6 +49,7 @@ function Cart() {
             <th>Quantity</th>
             <th>Unit Price</th>
             <th>Total Price</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -39,9 +59,14 @@ function Cart() {
               <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.size}</td>
-              <td>{item.quantity}</td>
+              <td>
+                <Button variant="secondary" onClick={() => decreaseQuantity(index)}>-</Button>
+                <Button variant="primary" >{item.quantity}</Button>                
+                <Button variant="secondary" onClick={() => increaseQuantity(index)}>+</Button>
+              </td>
               <td>{item.price}</td>
               <td>{item.price * item.quantity}</td>
+              <td><Button variant="danger" onClick={() => removeItem(index)}>Remove</Button></td>
             </tr>
           ))}
         </tbody>
