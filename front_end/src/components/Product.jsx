@@ -51,7 +51,7 @@ function Product({ item }) {
   return (
     <Container className="mb-4">
       <Card style={{ width: "18rem" }}>
-        <ProductImage />
+        <ProductImage imagFromDB={item.imagUrl} />
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
