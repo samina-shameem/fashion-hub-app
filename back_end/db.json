@@ -391,6 +391,62 @@
         }
       ],
       "id": 3
+    },
+    {
+      "userName": "seb@live.se",
+      "cartArray": [
+        {
+          "id": 1,
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "size": "XS",
+          "quantity": 1
+        },
+        {
+          "id": 2,
+          "name": "T-Shirt",
+          "description": "T-shirt dress with inset waist",
+          "sizes": "XS,S,M,L,XL",
+          "star": 5,
+          "price": 179,
+          "size": "M",
+          "quantity": 1
+        },
+        {
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 3,
+          "size": "XS",
+          "quantity": 1
+        },
+        {
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 3,
+          "size": "XS",
+          "quantity": 2
+        },
+        {
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 3,
+          "size": "S",
+          "quantity": 1
+        }
+      ],
+      "id": 4
     }
   ]
 }

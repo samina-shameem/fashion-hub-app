@@ -7,9 +7,11 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Badge from "react-bootstrap/Badge";
 import logo from "../assets/logo.jpg";
 import { UserLoginContext } from "../context/UserLoginProvider";
+import { CartContext } from "../context/CartProvider";
 
 const AppHeader = () => {
   const { userLoggedIn } = useContext(UserLoginContext);
+  const { cartArray } = useContext(CartContext);
   return (
     <Container className="mb-4">
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -26,7 +28,7 @@ const AppHeader = () => {
                     Profile
                   </Nav.Link>
                   <Nav.Link as={Link} to="/cart">
-                    Cart <Badge bg="secondary">4</Badge>
+                    Cart <Badge bg="secondary">{cartArray.length}</Badge>
                   </Nav.Link>
                 </>
               ) : (
@@ -38,7 +40,7 @@ const AppHeader = () => {
                     Sign up
                   </Nav.Link>
                   <Nav.Link as={Link} to="/cart">
-                    Cart
+                    Cart <Badge bg="secondary">{cartArray.length}</Badge>
                   </Nav.Link>
                 </>
               )}
