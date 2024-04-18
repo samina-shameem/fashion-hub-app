@@ -28,7 +28,7 @@ function Cart() {
 
   const decreaseQuantity = (index) => {
     const updatedCartArray = [...cartArray];
-    if (updatedCartArray[index].quantity > 1) {
+    if (updatedCartArray[index].quantity > 0) {
       updatedCartArray[index].quantity -= 1;
       setCartArray(updatedCartArray);
     }
