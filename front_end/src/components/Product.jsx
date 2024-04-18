@@ -3,13 +3,13 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
-import Alert from "react-bootstrap/Alert"; // Import Alert component
+import Alert from "react-bootstrap/Alert";
 import { CartContext } from "../context/CartProvider";
-import ProductImage from "./ProductImage"; // Import the ProductImage component
+import ProductImage from "./ProductImage";
 
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
-  const [alertMessage, setAlertMessage] = useState(null); // State for alert message
+  const [alertMessage, setAlertMessage] = useState(null);
   const { cartArray, setCartArray } = useContext(CartContext);
 
   const toggleSize = (size) => {
@@ -23,23 +23,19 @@ function Product({ item }) {
   };
 
   const addToCart = () => {
-    // Check if any size is selected
     if (selectedSizes.length === 0) {
-      setAlertMessage("Please select a size before adding to cart");
+      setAlertMessage({ message: "Please select a size before adding to cart", type: "danger" });
       return;
     }
 
     const itemsToAdd = selectedSizes.map((size) => {
-      // Check if the item with the same size is already in the cart
       const existingItemIndex = cartArray.findIndex((cartItem) => cartItem.id === item.id && cartItem.size === size);
 
-      // If the item already exists in the cart, increase its quantity
       if (existingItemIndex !== -1) {
         const updatedCartItem = { ...cartArray[existingItemIndex] };
         updatedCartItem.quantity += 1;
         return updatedCartItem;
       } else {
-        // Otherwise, create a new item with quantity 1
         return {
           ...item,
           size,
@@ -49,13 +45,13 @@ function Product({ item }) {
     });
 
     setCartArray((prevCart) => [...prevCart, ...itemsToAdd]);
-    setAlertMessage("Item added to cart successfully!");
+    setAlertMessage({ message: "Item added to cart successfully!", type: "success" });
   };
 
   return (
     <Container className="mb-4">
       <Card style={{ width: "18rem" }}>
-        <ProductImage /> {/* Render the ProductImage component */}
+        <ProductImage />
         <Card.Body>
           <Card.Title>{item.name}</Card.Title>
           <Card.Text>{item.description}</Card.Text>
@@ -81,10 +77,9 @@ function Product({ item }) {
           </ListGroup.Item>
         </ListGroup>
       </Card>
-      {/* Render Alert if alertMessage exists */}
       {alertMessage && (
-        <Alert variant="danger" className="mt-3">
-          {alertMessage}
+        <Alert variant={alertMessage.type} className="mt-3">
+          {alertMessage.message}
         </Alert>
       )}
     </Container>

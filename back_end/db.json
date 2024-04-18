@@ -19,6 +19,16 @@
       "userName": "qwe@wer.com",
       "password": "123",
       "id": 13
+    },
+    {
+      "userName": "f@gmail.com",
+      "password": "asd",
+      "id": 14
+    },
+    {
+      "userName": "seb@live.se",
+      "password": "jensen",
+      "id": 15
     }
   ],
   "products": [
@@ -355,6 +365,32 @@
         }
       ],
       "id": 2
+    },
+    {
+      "userName": "seb@live.se",
+      "cartArray": [
+        {
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 3,
+          "size": "XXL",
+          "quantity": 6
+        },
+        {
+          "name": "Shirt-xbar",
+          "description": "Shirt dress with tie belt",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 3,
+          "size": "XXL",
+          "quantity": 6
+        }
+      ],
+      "id": 3
     }
   ]
 }
