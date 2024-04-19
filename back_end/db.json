@@ -533,6 +533,56 @@
         }
       ],
       "id": 6
+    },
+    {
+      "userName": "ssk@gmail.com",
+      "cartArray": [
+        {
+          "id": 2,
+          "name": "T-Shirt",
+          "description": "T-shirt dress with inset waist",
+          "imagUrl": "https://lp2.hm.com/hmgoepprod?set=format%5Bwebp%5D%2Cquality%5B79%5D%2Csource%5B%2F4d%2Fcd%2F4dcdbd4c5b5c95c2fc782c6f565fb9ad17c31fc8.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url%5Bfile%3A%2Fproduct%2Fmain%5D",
+          "sizes": "XS,S,M,L,XL",
+          "star": 5,
+          "price": 179,
+          "size": "XS",
+          "quantity": 1
+        },
+        {
+          "id": 1,
+          "name": "Shirt",
+          "imagUrl": "https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb5%2Fd7%2Fb5d795c8d47251542178d6b60c1034f9f39d1afe.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]",
+          "description": "Slim Fit Polo Shirts",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "size": "S",
+          "quantity": 1
+        },
+        {
+          "id": 1,
+          "name": "Shirt",
+          "imagUrl": "https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb5%2Fd7%2Fb5d795c8d47251542178d6b60c1034f9f39d1afe.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]",
+          "description": "Slim Fit Polo Shirts",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "size": "S",
+          "quantity": 2
+        },
+        {
+          "id": 1,
+          "name": "Shirt",
+          "imagUrl": "https://lp2.hm.com/hmgoepprod?set=quality%5B79%5D%2Csource%5B%2Fb5%2Fd7%2Fb5d795c8d47251542178d6b60c1034f9f39d1afe.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BLOOKBOOK%5D%2Cres%5Bm%5D%2Chmver%5B1%5D&call=url[file:/product/main]",
+          "description": "Slim Fit Polo Shirts",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "size": "XS",
+          "quantity": 1
+        }
+      ],
+      "id": 7
     }
   ]
 }
