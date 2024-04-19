@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert"; // Import Alert component
 import { CartContext } from "../context/CartProvider";
 import { UserLoginContext } from "../context/UserLoginProvider";
 
@@ -12,6 +13,7 @@ function LoggedInCart() {
   const { userName, userLoggedIn } = useContext(UserLoginContext);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
+  const [alertMessage, setAlertMessage] = useState(null); // State for alert message
 
   // Calculate total price and total items
   useEffect(() => {
@@ -105,7 +107,7 @@ function LoggedInCart() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching cart data:", error);
+        setAlertMessage({ message: "Error fetching cart data: " + error.message, type: "danger" });
       });
   };
 
@@ -122,10 +124,10 @@ function LoggedInCart() {
         if (!response.ok) {
           throw new Error("Failed to update cart");
         }
-        console.log("Cart updated successfully");
+        setAlertMessage({ message: "Cart updated successfully", type: "success" });
       })
       .catch((error) => {
-        console.error("Error updating cart:", error);
+        setAlertMessage({ message: "Error updating cart: " + error.message, type: "danger" });
       });
   };
 
@@ -142,10 +144,10 @@ function LoggedInCart() {
         if (!response.ok) {
           throw new Error("Failed to create cart");
         }
-        console.log("Cart created successfully");
+        setAlertMessage({ message: "Cart created successfully", type: "success" });
       })
       .catch((error) => {
-        console.error("Error creating cart:", error);
+        setAlertMessage({ message: "Error creating cart: " + error.message, type: "danger" });
       });
   };
 
@@ -172,7 +174,7 @@ function LoggedInCart() {
         }
       })
       .catch((error) => {
-        console.error("Error fetching cart data:", error);
+        setAlertMessage({ message: "Error fetching cart data: " + error.message, type: "danger" });
       });
   };
 
@@ -188,14 +190,14 @@ function LoggedInCart() {
         console.log("Cart deleted successfully");
       })
       .catch((error) => {
-        console.error("Error deleting cart:", error);
+        setAlertMessage({ message: "Error deleting cart: " + error.message, type: "danger" });
       });
   };
 
   // Pay out the cart
   const payOutCart = () => {
     if (!userLoggedIn) {
-      alert("Please log in to pay out");
+      setAlertMessage({ message: "Please log in to pay out", type: "danger" }); // Set alert message
       return;
     }
 
@@ -230,21 +232,24 @@ function LoggedInCart() {
             console.log("Payment successful");
             deleteCart(cartId);
             setLoggedInCartArray([]);
-            alert("Payment successful!");
+            setAlertMessage({ message: "Payment successful!", type: "success" });
           })
           .catch((error) => {
-            console.error("Error processing payment:", error);
-            alert("Payment failed. Please try again.");
+            setAlertMessage({ message: "Error processing payment: " + error.message, type: "danger" });
           });
       })
       .catch((error) => {
-        console.error("Error processing payment:", error);
-        alert("Payment failed. Please try again.");
+        setAlertMessage({ message: "Error processing payment: " + error.message, type: "danger" });
       });
   };
 
   return (
     <Container>
+      {alertMessage && (
+        <Alert variant={alertMessage.type} className="mt-3">
+          {alertMessage.message}
+        </Alert>
+      )}
       <h1>Cart</h1>
       <Table striped bordered hover size="sm">
         <thead>
