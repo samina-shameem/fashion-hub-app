@@ -230,7 +230,7 @@ function LoggedInCart() {
               throw new Error("Failed to process payment");
             }
             console.log("Payment successful");
-            deleteCart(cartId);
+            //deleteCart(cartId);
             setLoggedInCartArray([]);
             setAlertMessage({ message: "Payment successful!", type: "success" });
           })
@@ -242,6 +242,8 @@ function LoggedInCart() {
         setAlertMessage({ message: "Error processing payment: " + error.message, type: "danger" });
       });
   };
+  // Check if the cart is empty
+  const isCartEmpty = loggedInCartArray.length === 0;
 
   return (
     <Container>
@@ -291,7 +293,7 @@ function LoggedInCart() {
           ))}
         </tbody>
       </Table>
-
+      {!isCartEmpty &&
       <Card style={{ width: "18rem" }}>
         <ListGroup variant="flush">
           <ListGroup.Item>Total Items: {totalItems}</ListGroup.Item>
@@ -302,7 +304,7 @@ function LoggedInCart() {
             </Button>
           </ListGroup.Item>
         </ListGroup>
-      </Card>
+      </Card> }
     </Container>
   );
 }
