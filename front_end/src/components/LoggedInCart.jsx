@@ -89,7 +89,7 @@ function LoggedInCart() {
     // Prepare the updated cart data
     const updatedCartData = {
       userName: userName,
-      loggedInCartArray: loggedInCartArray,
+      items: loggedInCartArray,
     };
 
     // Send a PUT request to update the existing cart
@@ -118,7 +118,7 @@ function LoggedInCart() {
     // Prepare the cart data to send to the backend
     const cartData = {
       userName: userName,
-      loggedInCartArray: loggedInCartArray,
+      items: loggedInCartArray,
     };
 
     // Send a POST request to create a new cart
@@ -178,6 +178,62 @@ function LoggedInCart() {
       });
   };
 
+  const payOutCart = () => {
+    if (!userLoggedIn) {
+      alert("Please log in to pay out");
+      return;
+    }
+
+    // Fetch the cart data by the user's username
+    fetch(`http://localhost:3000/carts?userName=${userName}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch cart data");
+        }
+        return response.json();
+      })
+      .then((cartData) => {
+        if (cartData.length === 0) {
+          throw new Error("Cart not found");
+        }
+        const cartId = cartData[0].id; // Extract the cart ID
+        return cartId;
+      })
+      .then((cartId) => {
+        const paymentData = {
+          userName: userName,
+          items: loggedInCartArray,
+        };
+
+        // Make a POST request to initiate payment
+        return fetch("http://localhost:3000/payments", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(paymentData),
+        }).then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to process payment");
+          }
+          console.log("Payment successful");
+
+          // Delete the cart in the backend using the retrieved cart ID
+          deleteCart(cartId);
+
+          // Empty the loggedInCartArray
+          setLoggedInCartArray([]);
+
+          // Show a success message
+          alert("Payment successful!");
+        });
+      })
+      .catch((error) => {
+        console.error("Error processing payment:", error);
+        alert("Payment failed. Please try again.");
+      });
+  };
+
   return (
     <Container>
       <h1>Cart</h1>
@@ -202,13 +258,21 @@ function LoggedInCart() {
               <td>{item.name}</td>
               <td>{item.size}</td>
               <td>
-                <Button variant="secondary" onClick={() => decreaseQuantity(index)}>-</Button>
+                <Button variant="secondary" onClick={() => decreaseQuantity(index)}>
+                  -
+                </Button>
                 <Button variant="primary">{item.quantity}</Button>
-                <Button variant="secondary" onClick={() => increaseQuantity(index)}>+</Button>
+                <Button variant="secondary" onClick={() => increaseQuantity(index)}>
+                  +
+                </Button>
               </td>
               <td>{item.price}</td>
               <td>{item.price * item.quantity}</td>
-              <td><Button variant="danger" onClick={() => removeItem(index)}>Remove</Button></td>
+              <td>
+                <Button variant="danger" onClick={() => removeItem(index)}>
+                  Remove
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -219,9 +283,13 @@ function LoggedInCart() {
           <ListGroup.Item>Total Items: {totalItems}</ListGroup.Item>
           <ListGroup.Item>Total Price: {totalPrice}</ListGroup.Item>
           <ListGroup.Item>
-            <Button variant="primary" style={{ marginRight: "5px" }}>Pay out</Button>
+            <Button variant="primary" style={{ marginRight: "5px" }} onClick={payOutCart}>
+              Pay out
+            </Button>
             {userLoggedIn ? (
-              <Button variant="primary" onClick={saveCart}>Save</Button>
+              <Button variant="primary" onClick={saveCart}>
+                Save
+              </Button>
             ) : (
               <p>Please log in to save your cart</p>
             )}
