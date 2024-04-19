@@ -40,13 +40,73 @@ function Cart() {
   };
 
   const saveCart = () => {
+    if (!userLoggedIn) {
+      alert("Please log in to save your cart");
+      return;
+    }
+
+    // Fetch the existing cart for the user
+    fetch(`http://localhost:3000/carts?userName=${userName}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch cart data");
+        }
+        return response.json();
+      })
+      .then((cartData) => {
+        if (cartData.length > 0) {
+          // If the user has an existing cart, identify its ID
+          const cartId = cartData[0].id;
+
+          // Send a PUT request to update the existing cart
+          updateCart(cartId);
+        } else {
+          // If the user doesn't have an existing cart, create a new one
+          createCart();
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching cart data:", error);
+      });
+  };
+
+  const updateCart = (cartId) => {
+    // Prepare the updated cart data
+    const updatedCartData = {
+      userName: userName,
+      cartArray: cartArray,
+    };
+
+    // Send a PUT request to update the existing cart
+    fetch(`http://localhost:3000/carts/${cartId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedCartData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to update cart");
+        }
+        console.log("Cart updated successfully");
+
+        // Clean up additional carts (if any)
+        cleanupCarts(cartId);
+      })
+      .catch((error) => {
+        console.error("Error updating cart:", error);
+      });
+  };
+
+  const createCart = () => {
     // Prepare the cart data to send to the backend
     const cartData = {
       userName: userName,
       cartArray: cartArray,
     };
 
-    // Send a PUT request to update the cart data on the backend
+    // Send a POST request to create a new cart
     fetch("http://localhost:3000/carts", {
       method: "POST",
       headers: {
@@ -56,14 +116,50 @@ function Cart() {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Failed to save cart");
+          throw new Error("Failed to create cart");
         }
-        // Handle successful response
-        console.log("Cart saved successfully");
+        console.log("Cart created successfully");
       })
       .catch((error) => {
-        // Handle error
-        console.error("Error saving cart:", error);
+        console.error("Error creating cart:", error);
+      });
+  };
+
+  const cleanupCarts = (currentCartId) => {
+    // Fetch all carts for the user
+    fetch(`http://localhost:3000/carts?userName=${userName}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch cart data");
+        }
+        return response.json();
+      })
+      .then((cartData) => {
+        // Delete additional carts (if any)
+        cartData.forEach((cart) => {
+          if (cart.id !== currentCartId) {
+            deleteCart(cart.id);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching cart data:", error);
+      });
+  };
+
+  const deleteCart = (cartId) => {
+    // Send a DELETE request to delete the cart
+    fetch(`http://localhost:3000/carts/${cartId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to delete cart");
+        }
+        console.log("Cart deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting cart:", error);
       });
   };
 
