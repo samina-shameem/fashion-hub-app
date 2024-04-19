@@ -70,61 +70,69 @@ function AnonymousCart() {
     calculateTotalItems();
   };
 
+  // Check if the cart is empty
+  const isCartEmpty = anonymousCartArray.length === 0;
+
+  // Render content conditionally
   return (
     <Container>
-      <h1>Cart without login</h1>
-      <Table striped bordered hover size="sm">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Product ID</th>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Quantity</th>
-            <th>Unit Price</th>
-            <th>Total Price</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {anonymousCartArray.map((item, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{item.id}</td>
-              <td>{item.name}</td>
-              <td>{item.size}</td>
-              <td>
-                <Button variant="secondary" onClick={() => decreaseQuantity(index)}>
-                  -
-                </Button>
-                <Button variant="primary">{item.quantity}</Button>
-                <Button variant="secondary" onClick={() => increaseQuantity(index)}>
-                  +
-                </Button>
-                {userLoggedIn && (
-                  <Button variant="secondary" onClick={() => addToUserCart(index)}>
-                    Add to user cart
-                  </Button>
-                )}
-              </td>
-              <td>{item.price}</td>
-              <td>{item.price * item.quantity}</td>
-              <td>
-                <Button variant="danger" onClick={() => removeItem(index)}>
-                  Remove
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+      {!isCartEmpty && (
+        <>
+          <h1>Cart without login</h1>
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Size</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {anonymousCartArray.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.id}</td>
+                  <td>{item.name}</td>
+                  <td>{item.size}</td>
+                  <td>
+                    <Button variant="secondary" onClick={() => decreaseQuantity(index)}>
+                      -
+                    </Button>
+                    <Button variant="primary">{item.quantity}</Button>
+                    <Button variant="secondary" onClick={() => increaseQuantity(index)}>
+                      +
+                    </Button>
+                    {userLoggedIn && (
+                      <Button variant="secondary" onClick={() => addToUserCart(index)}>
+                        Add to user cart
+                      </Button>
+                    )}
+                  </td>
+                  <td>{item.price}</td>
+                  <td>{item.price * item.quantity}</td>
+                  <td>
+                    <Button variant="danger" onClick={() => removeItem(index)}>
+                      Remove
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
 
-      <Card style={{ width: "18rem" }}>
-        <ListGroup variant="flush">
-          <ListGroup.Item>Total Items: {totalItems}</ListGroup.Item>
-          <ListGroup.Item>Total Price: {totalPrice}</ListGroup.Item>
-        </ListGroup>
-      </Card>
+          <Card style={{ width: "18rem" }}>
+            <ListGroup variant="flush">
+              <ListGroup.Item>Total Items: {totalItems}</ListGroup.Item>
+              <ListGroup.Item>Total Price: {totalPrice}</ListGroup.Item>
+            </ListGroup>
+          </Card>
+        </>
+      )}
     </Container>
   );
 }
