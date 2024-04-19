@@ -11,7 +11,9 @@ import { CartContext } from "../context/CartProvider";
 
 const AppHeader = () => {
   const { userLoggedIn } = useContext(UserLoginContext);
-  const { cartArray } = useContext(CartContext);
+  const { anonymousCartArray } = useContext(CartContext);
+  const { loggedInCartArray } = useContext(CartContext);
+
   return (
     <Container className="mb-4">
       <Navbar expand="lg" className="bg-body-tertiary">
@@ -28,7 +30,7 @@ const AppHeader = () => {
                     Profile
                   </Nav.Link>
                   <Nav.Link as={Link} to="/cart">
-                    Cart <Badge bg="secondary">{cartArray.length}</Badge>
+                    Cart <Badge bg="secondary">{loggedInCartArray.length}</Badge>
                   </Nav.Link>
                 </>
               ) : (
@@ -40,7 +42,7 @@ const AppHeader = () => {
                     Sign up
                   </Nav.Link>
                   <Nav.Link as={Link} to="/cart">
-                    Cart <Badge bg="secondary">{cartArray.length}</Badge>
+                    Cart <Badge bg="secondary">{anonymousCartArray.length}</Badge>
                   </Nav.Link>
                 </>
               )}

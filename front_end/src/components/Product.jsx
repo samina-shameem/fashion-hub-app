@@ -5,12 +5,15 @@ import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Alert from "react-bootstrap/Alert";
 import { CartContext } from "../context/CartProvider";
+import { UserLoginContext } from "../context/UserLoginProvider";
 import ProductImage from "./ProductImage";
 
 function Product({ item }) {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [alertMessage, setAlertMessage] = useState(null);
-  const { cartArray, setCartArray } = useContext(CartContext);
+  const { anonymousCartArray, setAnonymousCartArray } = useContext(CartContext);
+  const { loggedInCartArray, setLoggedInCartArray } = useContext(CartContext);
+  const { userLoggedIn } = useContext(UserLoginContext);
 
   const toggleSize = (size) => {
     setSelectedSizes((prevSelectedSizes) => {
@@ -22,17 +25,17 @@ function Product({ item }) {
     });
   };
 
-  const addToCart = () => {
+  const addToCart = () => {    
     if (selectedSizes.length === 0) {
       setAlertMessage({ message: "Please select a size before adding to cart", type: "danger" });
       return;
     }
-
+    if (userLoggedIn ){
     const itemsToAdd = selectedSizes.map((size) => {
-      const existingItemIndex = cartArray.findIndex((cartItem) => cartItem.id === item.id && cartItem.size === size);
+      const existingItemIndex = loggedInCartArray.findIndex((cartItem) => cartItem.id === item.id && cartItem.size === size);
 
       if (existingItemIndex !== -1) {
-        const updatedCartItem = { ...cartArray[existingItemIndex] };
+        const updatedCartItem = { ...loggedInCartArray[existingItemIndex] };
         updatedCartItem.quantity += 1;
         return updatedCartItem;
       } else {
@@ -43,9 +46,30 @@ function Product({ item }) {
         };
       }
     });
-
-    setCartArray((prevCart) => [...prevCart, ...itemsToAdd]);
+    setLoggedInCartArray((prevCart) => [...prevCart, ...itemsToAdd]);
     setAlertMessage({ message: "Item added to cart successfully!", type: "success" });
+  } 
+  else
+  {
+    
+    const itemsToAdd = selectedSizes.map((size) => {
+      const existingItemIndex = anonymousCartArray.findIndex((cartItem) => cartItem.id === item.id && cartItem.size === size);
+
+      if (existingItemIndex !== -1) {
+        const updatedCartItem = { ...anonymousCartArray[existingItemIndex] };
+        updatedCartItem.quantity += 1;
+        return updatedCartItem;
+      } else {
+        return {
+          ...item,
+          size,
+          quantity: 1,
+        };
+      }
+    });
+    setAnonymousCartArray((prevCart) => [...prevCart, ...itemsToAdd]);
+    setAlertMessage({ message: "Item added to cart successfully!", type: "success" });
+  }
   };
 
   return (
