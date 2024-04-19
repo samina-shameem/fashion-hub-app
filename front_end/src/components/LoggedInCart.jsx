@@ -66,16 +66,6 @@ function LoggedInCart() {
     setLoggedInCartArray(updatedLoggedInCartArray);
   };
 
-  // Save cart to the backend
-  const saveCart = () => {
-    if (!userLoggedIn) {
-      alert("Please log in to save your cart");
-      return;
-    }
-
-    sendCartToBackend();
-  };
-
   // Send cart data to the backend
   const sendCartToBackend = () => {
     // Prepare the cart data
@@ -305,13 +295,6 @@ function LoggedInCart() {
             <Button variant="primary" style={{ marginRight: "5px" }} onClick={payOutCart}>
               Pay out
             </Button>
-            {userLoggedIn ? (
-              <Button variant="primary" onClick={saveCart}>
-                Save
-              </Button>
-            ) : (
-              <p>Please log in to save your cart</p>
-            )}
           </ListGroup.Item>
         </ListGroup>
       </Card>
