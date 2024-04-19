@@ -201,7 +201,40 @@
       "id": 20
     }
   ],
-  "carts": [],
+  "carts": [
+    {
+      "userName": "ssk@gmail.com",
+      "items": [
+        {
+          "name": "Saree",
+          "description": "Indien Cotton Saree",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 20,
+          "size": "XS",
+          "quantity": 1
+        }
+      ],
+      "id": 1
+    },
+    {
+      "userName": "ssk@gmail.com",
+      "items": [
+        {
+          "name": "Saree",
+          "description": "Indien Cotton Saree",
+          "sizes": "XS,S,M,L,XL,XXL",
+          "star": 3,
+          "price": 299,
+          "id": 20,
+          "size": "XS",
+          "quantity": 1
+        }
+      ],
+      "id": 2
+    }
+  ],
   "payments": [
     {
       "userName": "ssk@gmail.com",

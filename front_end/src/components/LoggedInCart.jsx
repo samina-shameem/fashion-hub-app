@@ -19,6 +19,14 @@ function LoggedInCart() {
     calculateTotalItems();
   }, [loggedInCartArray]);
 
+  // Send cart updates to the backend whenever loggedInCartArray changes
+  useEffect(() => {
+    if (userLoggedIn) {
+      sendCartToBackend();
+    }
+  }, [loggedInCartArray, userLoggedIn]);
+
+  // Calculate total price
   function calculateTotalPrice() {
     let total = 0;
     loggedInCartArray.forEach((item) => {
@@ -27,6 +35,7 @@ function LoggedInCart() {
     setTotalPrice(total);
   }
 
+  // Calculate total items
   function calculateTotalItems() {
     let total = 0;
     loggedInCartArray.forEach((item) => {
@@ -35,12 +44,14 @@ function LoggedInCart() {
     setTotalItems(total);
   }
 
+  // Increase quantity of an item
   const increaseQuantity = (index) => {
     const updatedLoggedInCartArray = [...loggedInCartArray];
     updatedLoggedInCartArray[index].quantity += 1;
     setLoggedInCartArray(updatedLoggedInCartArray);
   };
 
+  // Decrease quantity of an item
   const decreaseQuantity = (index) => {
     const updatedLoggedInCartArray = [...loggedInCartArray];
     if (updatedLoggedInCartArray[index].quantity > 0) {
@@ -49,18 +60,42 @@ function LoggedInCart() {
     }
   };
 
+  // Remove an item from the cart
   const removeItem = (index) => {
     const updatedLoggedInCartArray = loggedInCartArray.filter((_, i) => i !== index);
     setLoggedInCartArray(updatedLoggedInCartArray);
   };
 
+  // Save cart to the backend
   const saveCart = () => {
     if (!userLoggedIn) {
       alert("Please log in to save your cart");
       return;
     }
 
-    // Fetch the existing cart for the user
+    sendCartToBackend();
+  };
+
+  // Send cart data to the backend
+  const sendCartToBackend = () => {
+    // Prepare the cart data
+    const cartData = {
+      userName: userName,
+      items: loggedInCartArray,
+    };
+
+    // Determine whether to create or update the cart
+    if (loggedInCartArray.length === 0) {
+      // If the cart is empty, delete it from the backend
+      deleteCart();
+    } else {
+      // If the cart is not empty, send it to the backend
+      fetchCartData(cartData);
+    }
+  };
+
+  // Fetch existing cart data from the backend
+  const fetchCartData = (cartData) => {
     fetch(`http://localhost:3000/carts?userName=${userName}`)
       .then((response) => {
         if (!response.ok) {
@@ -68,16 +103,15 @@ function LoggedInCart() {
         }
         return response.json();
       })
-      .then((cartData) => {
-        if (cartData.length > 0) {
-          // If the user has an existing cart, identify its ID
-          const cartId = cartData[0].id;
-
-          // Send a PUT request to update the existing cart
-          updateCart(cartId);
+      .then((cartResponse) => {
+        if (cartResponse.length > 0) {
+          // If the user has an existing cart, update it
+          updateCart(cartResponse[0].id, cartData);
+          const cartIdsToDelete = cartResponse.slice(1).map((cart) => cart.id); // Extract cart IDs to delete
+          cleanupCarts(cartIdsToDelete);
         } else {
           // If the user doesn't have an existing cart, create a new one
-          createCart();
+          createCart(cartData);
         }
       })
       .catch((error) => {
@@ -85,43 +119,28 @@ function LoggedInCart() {
       });
   };
 
-  const updateCart = (cartId) => {
-    // Prepare the updated cart data
-    const updatedCartData = {
-      userName: userName,
-      items: loggedInCartArray,
-    };
-
-    // Send a PUT request to update the existing cart
+  // Update an existing cart
+  const updateCart = (cartId, cartData) => {
     fetch(`http://localhost:3000/carts/${cartId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedCartData),
+      body: JSON.stringify(cartData),
     })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to update cart");
         }
         console.log("Cart updated successfully");
-
-        // Clean up additional carts (if any)
-        cleanupCarts(cartId);
       })
       .catch((error) => {
         console.error("Error updating cart:", error);
       });
   };
 
-  const createCart = () => {
-    // Prepare the cart data to send to the backend
-    const cartData = {
-      userName: userName,
-      items: loggedInCartArray,
-    };
-
-    // Send a POST request to create a new cart
+  // Create a new cart
+  const createCart = (cartData) => {
     fetch("http://localhost:3000/carts", {
       method: "POST",
       headers: {
@@ -140,8 +159,15 @@ function LoggedInCart() {
       });
   };
 
-  const cleanupCarts = (currentCartId) => {
-    // Fetch all carts for the user
+  // Cleanup additional carts from the backend
+  const cleanupCarts = (cartIdsToDelete) => {
+    cartIdsToDelete.forEach((cartId) => {
+      deleteCartWithID(cartId);
+    });
+  };
+
+  // Delete all carts from the backend for this user
+  const deleteCart = () => {
     fetch(`http://localhost:3000/carts?userName=${userName}`)
       .then((response) => {
         if (!response.ok) {
@@ -149,21 +175,19 @@ function LoggedInCart() {
         }
         return response.json();
       })
-      .then((cartData) => {
-        // Delete additional carts (if any)
-        cartData.forEach((cart) => {
-          if (cart.id !== currentCartId) {
-            deleteCart(cart.id);
-          }
-        });
+      .then((cartResponse) => {
+        if (cartResponse.length > 0) {
+          const cartIdsToDelete = cartResponse.map((cart) => cart.id);
+          cleanupCarts(cartIdsToDelete);
+        }
       })
       .catch((error) => {
         console.error("Error fetching cart data:", error);
       });
   };
 
-  const deleteCart = (cartId) => {
-    // Send a DELETE request to delete the cart
+  // Delete the cart from the backend using cartId
+  const deleteCartWithID = (cartId) => {
     fetch(`http://localhost:3000/carts/${cartId}`, {
       method: "DELETE",
     })
@@ -178,13 +202,13 @@ function LoggedInCart() {
       });
   };
 
+  // Pay out the cart
   const payOutCart = () => {
     if (!userLoggedIn) {
       alert("Please log in to pay out");
       return;
     }
 
-    // Fetch the cart data by the user's username
     fetch(`http://localhost:3000/carts?userName=${userName}`)
       .then((response) => {
         if (!response.ok) {
@@ -196,37 +220,32 @@ function LoggedInCart() {
         if (cartData.length === 0) {
           throw new Error("Cart not found");
         }
-        const cartId = cartData[0].id; // Extract the cart ID
-        return cartId;
-      })
-      .then((cartId) => {
+        const cartId = cartData[0].id;
         const paymentData = {
           userName: userName,
           items: loggedInCartArray,
         };
 
-        // Make a POST request to initiate payment
-        return fetch("http://localhost:3000/payments", {
+        fetch("http://localhost:3000/payments", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(paymentData),
-        }).then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to process payment");
-          }
-          console.log("Payment successful");
-
-          // Delete the cart in the backend using the retrieved cart ID
-          deleteCart(cartId);
-
-          // Empty the loggedInCartArray
-          setLoggedInCartArray([]);
-
-          // Show a success message
-          alert("Payment successful!");
-        });
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to process payment");
+            }
+            console.log("Payment successful");
+            deleteCart(cartId);
+            setLoggedInCartArray([]);
+            alert("Payment successful!");
+          })
+          .catch((error) => {
+            console.error("Error processing payment:", error);
+            alert("Payment failed. Please try again.");
+          });
       })
       .catch((error) => {
         console.error("Error processing payment:", error);
